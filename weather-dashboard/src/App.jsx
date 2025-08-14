@@ -3,18 +3,18 @@ import React, { useState, useEffect } from 'react';
 import SearchBar from './components/SearchBar';
 import WeatherDisplay from './components/WeatherCard';
 import ErrorMessage from './components/ErrorMessage';
+import CurrentTimeCard from './components/CurrentTimeCard';
 
 function App() {
   const [cityName, setCityName] = useState('');
   const [weatherData, setWeatherData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(''); // New state for error messages
+  const [errorMessage, setErrorMessage] = useState('');
 
   const fetchWeatherData = async (city) => {
-    // 1. Clear any previous error message and weather data before a new fetch
     setErrorMessage('');
-    setWeatherData({}); // Clear old weather data when a new search starts
+    setWeatherData({});
 
-    if (!city) { // Prevent API call for empty city name
+    if (!city) {
       setErrorMessage('Please enter a city name.');
       return;
     }
@@ -22,10 +22,8 @@ function App() {
     try {
       const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=acd9ecd666fb6eae8b258f2a4205143f&units=metric`);
 
-      // 2. Check if the HTTP response was successful
       if (!response.ok) {
         let errorText = 'An unknown error occurred.';
-        // Attempt to parse specific error messages from the API
         const errorData = await response.json();
         if (response.status === 404) {
           errorText = `City not found: "${city}". Please check the spelling.`;
@@ -33,43 +31,54 @@ function App() {
           errorText = `Error: ${errorData.message}`;
         }
         setErrorMessage(errorText);
-        setWeatherData({}); // Ensure weather data is cleared on error
-        return; // Stop execution if there's an error
+        setWeatherData({});
+        return;
       }
 
       const data = await response.json();
-      setWeatherData(data); // Set weather data on success
-      setErrorMessage(''); // Clear error message on successful fetch
+      setWeatherData(data);
+      setErrorMessage('');
 
     } catch (error) {
-      // 3. Handle network errors or other unexpected issues
       console.error('Error fetching weather data:', error);
       setErrorMessage('Could not connect to the weather service. Please check your internet connection or try again later.');
-      setWeatherData({}); // Ensure weather data is cleared on network error
+      setWeatherData({});
     }
   };
   
-  // useEffect to fetch weather data when cityName changes
   useEffect(() => {
-    // Only fetch if cityName is not empty, otherwise keep showing placeholder
     if (cityName) {
       fetchWeatherData(cityName);
     } else {
-      setWeatherData({}); // Clear weather data if cityName becomes empty
-      setErrorMessage(''); // Clear error if cityName becomes empty
+      setWeatherData({});
+      setErrorMessage('');
     }
   }, [cityName]);
 
   return (
-    <div className="min-h-screen bg-blue-50 p-4 flex flex-col items-center">
+    <div className="min-h-screen bg-blue-50 p-4 flex flex-col items-center relative">
       <h1 className="text-3xl font-bold mb-6">Weather Dashboard</h1>
-      {/* We pass setCityName down to SearchBar */}
+      
+      {/* Non-clickable Div for Current Location, placed at the top-right corner */}
+      <div
+        className="absolute top-4 right-4 bg-gray-200 text-gray-700 px-4 py-2 rounded-full shadow-lg flex items-center space-x-2" // Removed cursor-pointer and hover/focus styles
+      >
+        {/* Compass Icon (using a Unicode character for simplicity) */}
+        <span role="img" aria-label="compass" className="text-xl">🧭</span> 
+        <span>Current Location</span>
+      </div>
+
       <SearchBar onSearch={setCityName} />
       
-      {/* Render the ErrorMessage component */}
       <ErrorMessage message={errorMessage} /> 
 
-      {/* We pass weatherData down to WeatherDisplay */}
+      {Object.keys(weatherData).length > 0 && typeof weatherData.timezone === 'number' && (
+        <CurrentTimeCard 
+          cityName={weatherData.name} 
+          timezoneOffset={weatherData.timezone} 
+        />
+      )}
+
       <WeatherDisplay weatherData={weatherData} />
     </div>
   );
