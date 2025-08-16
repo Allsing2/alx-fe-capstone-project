@@ -16,7 +16,6 @@ function WeatherDisplay({ weatherData }) {
       <p>Pressure: {weatherData.main.pressure} hPa</p>
       <p>Sunrise: {new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString()}</p>
       <p>Sunset: {new Date(weatherData.sys.sunset * 1000).toLocaleTimeString()}</p>
-      <p>UV Index: {weatherData.uvi}</p> 
     </div>
   );
 }

@@ -10,6 +10,8 @@ function App() {
   const [weatherData, setWeatherData] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
 
+  const OPEN_WEATHER_API_KEY = import.meta.env.VITE_OPEN_WEATHER_API_KEY;
+
   const fetchWeatherData = async (city) => {
     setErrorMessage('');
     setWeatherData({});
@@ -20,7 +22,7 @@ function App() {
     }
 
     try {
-      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=acd9ecd666fb6eae8b258f2a4205143f&units=metric`);
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OPEN_WEATHER_API_KEY}&units=metric`);
 
       if (!response.ok) {
         let errorText = 'An unknown error occurred.';
