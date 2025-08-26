@@ -1,16 +1,12 @@
-// src/components/ErrorMessage.jsx
 import React from 'react';
 
 /**
- * Renders an error message.
- * The message is displayed in a red, rounded box.
- *
- * @param {object} props - The component's props.
+  * A component to display error messages in the weather dashboard.
+  * @param {object} props - The component's props.
  * @param {string} props.message - The error message to display.
  */
 function ErrorMessage({ message }) {
-  // If there's no message, we don't render anything.
-  // This is a simple form of conditional rendering within the component itself.
+// If there's no message, don't render anything
   if (!message) {
     return null;
   }

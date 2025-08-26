@@ -2,8 +2,7 @@
 import React, { useState, useEffect } from 'react';
 
 /**
- * Displays the current time and date for a given city based on its timezone offset.
- *
+* Component to display the current local time and date for a given city based on its timezone offset.
  * @param {object} props - The component's props.
  * @param {string} props.cityName - The name of the city.
  * @param {number | null} props.timezoneOffset - The timezone offset in seconds from UTC.
@@ -14,7 +13,7 @@ function CurrentTimeCard({ cityName, timezoneOffset }) {
 
   // Effect to update the time every second and whenever timezoneOffset or cityName changes
   useEffect(() => {
-    // We only proceed if we have a city name and a valid timezone offset
+    // Only set up the interval if we have a valid city name and timezone offset
     if (cityName && typeof timezoneOffset === 'number') {
       // Function to calculate and format the local time
       const updateTime = () => {
@@ -23,7 +22,7 @@ function CurrentTimeCard({ cityName, timezoneOffset }) {
         // Calculate the city's local time in milliseconds
         // (timezoneOffset is in seconds, so multiply by 1000 to convert to milliseconds)
         const cityLocalMilliseconds = utcNow + (timezoneOffset * 1000);
-        // Create a Date object from the city's local milliseconds
+        // Create a Date object for the city's local time
         const cityDate = new Date(cityLocalMilliseconds);
 
         // Format the date and time
@@ -46,7 +45,7 @@ function CurrentTimeCard({ cityName, timezoneOffset }) {
       // Set up an interval to update the time every second (1000 ms)
       const intervalId = setInterval(updateTime, 1000);
 
-      // Clean up the interval when the component unmounts or dependencies change
+      // Cleanup function to clear the interval when component unmounts or dependencies change
       return () => clearInterval(intervalId);
     } else {
       // Clear the time if city name or offset is not available
