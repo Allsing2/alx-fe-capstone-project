@@ -6,7 +6,7 @@ A simple and responsive Weather Dashboard built with **React** that allows users
 
 ## 🚀 Features
 
-- 🔍 Search weather by city name
+- 🔍 Search weather by city name or Country name
 - 🌡️ Display current temperature, humidity, and wind speed
 - ☁️ Show weather conditions with icons
 - 📍 Optionally fetch user’s location for local weather
